@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:local_auth/local_auth.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -95,12 +96,26 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () async {
-          String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-            '#673ab7',
-            'Cancelar',
-            true,
-            ScanMode.QR,
-          );
+          var localAuth = LocalAuthentication();
+          bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+          if (canCheckBiometrics) {
+            bool didAuthenticate = await localAuth.authenticate(
+              localizedReason:
+                  'Por favot coloca tu huella dactilar para poder escanear el QR',
+              options: const AuthenticationOptions(
+                biometricOnly: true,
+              ),
+            );
+            if (didAuthenticate) {
+              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                '#673ab7',
+                'Cancelar',
+                true,
+                ScanMode.QR,
+              );
+              print(barcodeScanRes);
+            }
+          }
         },
         child: const Icon(
           Icons.qr_code_scanner,
