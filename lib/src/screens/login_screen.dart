@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:login_to_do_list_app/src/services.dart';
 
 class LoginScreen extends StatelessWidget {
   static String routeName = 'login';
@@ -71,7 +73,7 @@ class _LoginForm extends StatelessWidget {
         const SizedBox(height: 30.0),
         _passwordTextField(),
         const SizedBox(height: 80.0),
-        _buttonSubmit(),
+        _buttonSubmit(context),
       ],
     );
   }
@@ -111,9 +113,8 @@ class _LoginForm extends StatelessWidget {
     );
   }
 
-  Widget _buttonSubmit() {
+  Widget _buttonSubmit(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
       child: const Text('Login'),
       style: ElevatedButton.styleFrom(
         primary: Colors.deepPurple,
@@ -123,8 +124,29 @@ class _LoginForm extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
       ),
+      onPressed: () async {
+        FocusScope.of(context).unfocus();
+        final authServive = Provider.of<AuthService>(
+          context,
+          listen: false,
+        );
+        final String? errorMessage = await authServive.login(
+          "hola",
+          "loginFormProvider.password",
+        );
+        if (errorMessage == null) {
+          Navigator.pushReplacementNamed(context, 'home');
+        } else {
+          final snackBar = SnackBar(
+            content: Text(errorMessage),
+            action: SnackBarAction(
+              label: 'Aceptar',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
     );
   }
-
-  //Widget _userTextField() {}
 }
