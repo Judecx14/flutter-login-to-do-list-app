@@ -125,8 +125,10 @@ class _LoginForm extends StatelessWidget {
         ),
       ),
       onPressed: () async {
+        //TODO quitar esto
         FocusScope.of(context).unfocus();
-        final authServive = Provider.of<AuthService>(
+        Navigator.pushNamed(context, 'home');
+        /* final authServive = Provider.of<AuthService>(
           context,
           listen: false,
         );
@@ -145,7 +147,7 @@ class _LoginForm extends StatelessWidget {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+        } */
       },
     );
   }
