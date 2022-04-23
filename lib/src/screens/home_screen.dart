@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -94,12 +95,12 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () async {
-          /* String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-            '#673AB7 ',
+          String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+            '#673ab7',
             'Cancelar',
             true,
             ScanMode.QR,
-          ); */
+          );
         },
         child: const Icon(
           Icons.qr_code_scanner,
