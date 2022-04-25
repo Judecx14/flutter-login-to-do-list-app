@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService extends ChangeNotifier {
-  static const String _url = 'identitytoolkit.googleapis.com';
+  static const String _url = '192.168.0.7:8000';
   final storage = const FlutterSecureStorage();
 
   Future<String?> login(String email, String password) async {
@@ -12,17 +12,19 @@ class AuthService extends ChangeNotifier {
       'email': email,
       'password': password,
     };
-    final uri = Uri.https(
+    final uri = Uri.parse('http://192.168.0.7:8000/api/v1/login-mobile');
+    //TODO cuando este el https en server
+    /* final uri = Uri.https(
       _url,
-      '/v1/accounts:signInWithPassword',
-    );
-    final resp = await http.post(uri, body: json.encode(authData));
+      '/api/v1/login-mobile',
+    ); */
+    final resp = await http.post(uri, body: authData);
     final Map<String, dynamic> decodeResp = json.decode(resp.body);
-    if (decodeResp.containsKey('status')) {
+    if (decodeResp['status'] == true) {
       await storage.write(key: 'email', value: decodeResp['email']);
       return null;
     } else {
-      return "Sucedio un error no es posible iniciar sesión";
+      return decodeResp['message'];
     }
   }
 

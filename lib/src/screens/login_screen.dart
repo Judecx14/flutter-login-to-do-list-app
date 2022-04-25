@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.deepPurple, //or set color with: Color(0xFF0000FF)
+    ));
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -49,9 +53,17 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class _LoginForm extends StatelessWidget {
+class _LoginForm extends StatefulWidget {
   const _LoginForm({Key? key}) : super(key: key);
+  static TextEditingController emailControler = TextEditingController();
+  static TextEditingController passwordControler = TextEditingController();
+  static bool loading = false;
 
+  @override
+  State<_LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<_LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,14 +84,21 @@ class _LoginForm extends StatelessWidget {
         _emailTextField(),
         const SizedBox(height: 30.0),
         _passwordTextField(),
-        const SizedBox(height: 80.0),
-        _buttonSubmit(context),
+        const SizedBox(height: 60.0),
+        _LoginForm.loading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.deepPurple,
+                ),
+              )
+            : _buttonSubmit(context),
       ],
     );
   }
 
   Widget _emailTextField() {
     return TextFormField(
+      controller: _LoginForm.emailControler,
       keyboardType: TextInputType.emailAddress,
       cursorColor: Colors.deepPurple,
       decoration: const InputDecoration(
@@ -97,6 +116,7 @@ class _LoginForm extends StatelessWidget {
 
   Widget _passwordTextField() {
     return TextFormField(
+      controller: _LoginForm.passwordControler,
       obscureText: true,
       cursorColor: Colors.deepPurple,
       decoration: const InputDecoration(
@@ -125,20 +145,27 @@ class _LoginForm extends StatelessWidget {
         ),
       ),
       onPressed: () async {
-        //TODO quitar esto
+        setState(() {
+          _LoginForm.loading = true;
+        });
         FocusScope.of(context).unfocus();
-        Navigator.pushNamed(context, 'home');
-        /* final authServive = Provider.of<AuthService>(
+        final authServive = Provider.of<AuthService>(
           context,
           listen: false,
         );
         final String? errorMessage = await authServive.login(
-          "hola",
-          "loginFormProvider.password",
+          _LoginForm.emailControler.text,
+          _LoginForm.passwordControler.text,
         );
         if (errorMessage == null) {
           Navigator.pushReplacementNamed(context, 'home');
+          setState(() {
+            _LoginForm.loading = false;
+          });
         } else {
+          setState(() {
+            _LoginForm.loading = false;
+          });
           final snackBar = SnackBar(
             content: Text(errorMessage),
             action: SnackBarAction(
@@ -147,7 +174,7 @@ class _LoginForm extends StatelessWidget {
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        } */
+        }
       },
     );
   }
