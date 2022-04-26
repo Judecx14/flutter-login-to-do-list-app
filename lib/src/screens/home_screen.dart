@@ -123,19 +123,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 30.0,
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  padding: const EdgeInsets.all(25.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      'assets/qr.png',
-                      width: 275.0,
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(25.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/qr.png',
+                        width: 215.0,
+                      ),
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 85,
                 )
               ],
             ),
