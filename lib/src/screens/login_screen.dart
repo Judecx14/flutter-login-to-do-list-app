@@ -12,8 +12,9 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.deepPurple, //or set color with: Color(0xFF0000FF)
+      statusBarColor: Colors.deepPurple,
     ));
+    double imageHeight = MediaQuery.of(context).size.height * 0.25;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -26,9 +27,11 @@ class LoginScreen extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(15.0),
-                  child: SvgPicture.asset(
-                    'assets/banner.svg',
-                    height: 300.0,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/banner.svg',
+                      height: imageHeight,
+                    ),
                   ),
                 ),
                 Expanded(
